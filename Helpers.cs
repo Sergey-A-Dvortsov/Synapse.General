@@ -18,6 +18,7 @@ namespace Synapse.General
     using System.IO.Compression;
     using System.Xml.Linq;
     using System.Collections.Concurrent;
+    using System.Net.WebSockets;
 
     public static class Helpers
     {
@@ -50,7 +51,7 @@ namespace Synapse.General
                     file.WriteLine(header);
                 foreach (var item in items)
                 {
-                   await file.WriteLineAsync(item.ToString());
+                    await file.WriteLineAsync(item.ToString());
                 }
             }
         }
@@ -101,12 +102,12 @@ namespace Synapse.General
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.Error("{0}. {1}", ex.Message, ex.StackTrace);
+                throw;
             }
 
-            return default(T);
+            //return default(T);
 
         }
 
@@ -127,7 +128,6 @@ namespace Synapse.General
 
         public static bool IsJson(this string str)
         {
-
             var input = str.Trim();
 
             if ((input.StartsWith("{") && input.EndsWith("}")) || //For object
@@ -153,52 +153,40 @@ namespace Synapse.General
         #endregion
 
         #region datetime
-
-        public static readonly DateTime DateTimeUnixEpochStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-
-        public static DateTime UnixToDateTime(this ulong unix)
+       
+        public static DateTime UnixTimeSecondsToDateTime(this long seconds)
         {
-            return DateTimeUnixEpochStart.AddSeconds(unix);
+           return DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime;         
         }
 
-        public static ulong ToUnix(DateTime dateTime)
+        public static DateTime UnixTimeMillisecondsToDateTime(this long milliseconds)
         {
-            return (ulong)Math.Floor(dateTime.Subtract(DateTimeUnixEpochStart).TotalSeconds);
-        }
-                        
-        public static DateTime ToDateTimeFromMs(this ulong unix)
-        {
-            return DateTimeUnixEpochStart.AddMilliseconds(unix);
+            return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
         }
 
-        public static DateTime ToDateTimeFromMs(this long unix)
+        public static long ToUnixTimeSeconds(this DateTime dateTime)
         {
-            return DateTimeUnixEpochStart.AddMilliseconds(unix);
+           return new DateTimeOffset(dateTime.ToUniversalTime()).ToUnixTimeSeconds();
         }
 
-        public static ulong ToUnixWithMs(this DateTime dateTime)
+        public static long ToUnixTimeMilliseconds(this DateTime dateTime)
         {
-            return (ulong)Math.Floor(dateTime.Subtract(DateTimeUnixEpochStart).TotalMilliseconds);
+            return new DateTimeOffset(dateTime.ToUniversalTime()).ToUnixTimeMilliseconds();
         }
 
-        public static double ToUniWithSec(this DateTime dateTime)
+        public static double ToUnixTimePartSeconds(this DateTime dateTime)
         {
-            return dateTime.Subtract(DateTimeUnixEpochStart).TotalSeconds;
+            return dateTime.Subtract(DateTime.UnixEpoch).TotalSeconds;
         }
 
-        public static DateTime ToDateTime(this double unix)
+        public static DateTime UnixTimeToDateTimeFromPartSeconds(this double seconds)
         {
-            return DateTimeUnixEpochStart.AddSeconds(unix);
+            return DateTime.UnixEpoch.AddSeconds(seconds);
         }
 
-        public static DateTime ToDateTime(this decimal unix)
+         public static DateTime UnixTimeToDateTimeFromTicks(this long tiks)
         {
-            return DateTimeUnixEpochStart.AddSeconds((double)unix);
-        }
-
-        public static DateTime ToDateTimeFromTicks(this long unix)
-        {
-            return DateTimeUnixEpochStart.AddTicks(unix);
+            return DateTime.UnixEpoch.AddTicks(tiks);
         }
 
         #endregion
@@ -333,7 +321,7 @@ namespace Synapse.General
             using var streamReader = new StreamReader(decompressedStream);
             return streamReader.ReadToEnd();
         }
-  
+
         private static int GetMonth(char smb)
         {
             //A-01;B-02;C-03;D-04;E-05;F-06;G-07;H-08;I-09;J-10;K-11;L-12;
