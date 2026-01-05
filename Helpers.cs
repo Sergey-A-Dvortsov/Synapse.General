@@ -154,37 +154,72 @@ namespace Synapse.General
 
         #region datetime
        
+        /// <summary>
+        /// Convert from UnixTimestamp (seconds) to DateTime type
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
         public static DateTime UnixTimeSecondsToDateTime(this long seconds)
         {
            return DateTimeOffset.FromUnixTimeSeconds(seconds).DateTime;         
         }
 
+        /// <summary>
+        /// Convert from UnixTimestamp (milliseconds) to DateTime type
+        /// </summary>
+        /// <param name="milliseconds"></param>
+        /// <returns></returns>
         public static DateTime UnixTimeMillisecondsToDateTime(this long milliseconds)
         {
             return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
         }
 
+        /// <summary>
+        /// Convert from DateTime to UnixTimestamp (seconds)
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static long ToUnixTimeSeconds(this DateTime dateTime)
         {
            return new DateTimeOffset(dateTime.ToUniversalTime()).ToUnixTimeSeconds();
         }
 
+        /// <summary>
+        /// Convert from DateTime to UnixTimestamp (milliseconds)
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static long ToUnixTimeMilliseconds(this DateTime dateTime)
         {
             return new DateTimeOffset(dateTime.ToUniversalTime()).ToUnixTimeMilliseconds();
         }
 
+        /// <summary>
+        /// Convert from DateTime to UnixTimestamp (part seconds)
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
         public static double ToUnixTimePartSeconds(this DateTime dateTime)
         {
             return dateTime.Subtract(DateTime.UnixEpoch).TotalSeconds;
         }
 
+        /// <summary>
+        /// Convert from UnixTimestamp (part seconds) to DateTime type
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
         public static DateTime UnixTimeToDateTimeFromPartSeconds(this double seconds)
         {
             return DateTime.UnixEpoch.AddSeconds(seconds);
         }
 
-         public static DateTime UnixTimeToDateTimeFromTicks(this long tiks)
+        /// <summary>
+        /// Convert from UnixTimestamp (tiks) to DateTime type
+        /// </summary>
+        /// <param name="tiks"></param>
+        /// <returns></returns>
+        public static DateTime UnixTimeToDateTimeFromTicks(this long tiks)
         {
             return DateTime.UnixEpoch.AddTicks(tiks);
         }
