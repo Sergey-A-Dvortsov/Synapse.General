@@ -6,12 +6,21 @@
     <Nullable>enable</Nullable>
     <Copyright>Sergey Dvortsov</Copyright>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <FileVersion>1.0.0.*</FileVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Title>Synapse.General</Title>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LICENSE.txt">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
   </ItemGroup>
 
 </Project>

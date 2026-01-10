@@ -15,15 +15,4 @@ namespace Synapse.General
         Asc,
         Desc
     }
-
-    /// <summary>
-    /// The trade direction
-    /// </summary>
-    public enum Sides
-    {
-        Buy,
-        Sell
-    }
-
-
 }

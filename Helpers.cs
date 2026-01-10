@@ -29,30 +29,36 @@ namespace Synapse.General
 
         #region write a file to disk
 
-
         public static void SaveToFile(this IEnumerable<object> items, string fileName, string header = "", bool append = false)
         {
-            using (StreamWriter file = new(fileName, append))
+            using StreamWriter file = new(fileName, append);
+            if (!string.IsNullOrWhiteSpace(header))
+                file.WriteLine(header);
+            foreach (var item in items)
             {
-                if (!string.IsNullOrWhiteSpace(header))
-                    file.WriteLine(header);
-                foreach (var item in items)
-                {
-                    file.WriteLine(item.ToString());
-                }
+                file.WriteLine(item.ToString());
             }
         }
 
         public static async Task SaveToFileAsync(this IEnumerable<object> items, string fileName, string header = "", bool append = false)
         {
-            using (StreamWriter file = new(fileName, append))
+            using StreamWriter file = new(fileName, append);
+            if (!string.IsNullOrWhiteSpace(header))
+                file.WriteLine(header);
+            foreach (var item in items)
             {
-                if (!string.IsNullOrWhiteSpace(header))
-                    file.WriteLine(header);
-                foreach (var item in items)
-                {
-                    await file.WriteLineAsync(item.ToString());
-                }
+                await file.WriteLineAsync(item.ToString());
+            }
+        }
+
+        public static void SaveToFile<T>(this IEnumerable<T> items, string fileName, string header = "", bool append = false)
+        {
+            using StreamWriter file = new(fileName, append);
+            if (!string.IsNullOrWhiteSpace(header))
+                file.WriteLine(header);
+            foreach (var item in items)
+            {
+                file.WriteLine(item?.ToString());
             }
         }
 
@@ -64,6 +70,14 @@ namespace Synapse.General
                     file.WriteLine(header);
                 file.WriteLine(item.ToString());
             }
+        }
+
+        public static void SaveToFile<T>(T item, string fileName, string header = "", bool append = true)
+        {
+            using StreamWriter file = new(fileName, append);
+            if (!string.IsNullOrWhiteSpace(header))
+                file.WriteLine(header);
+            file.WriteLine(item?.ToString());
         }
 
         #endregion
@@ -320,7 +334,15 @@ namespace Synapse.General
         }
 
         #endregion
-       
+
+        public static string[] ReadAllLines(this FileInfo fileinfo)
+        {
+            if (!File.Exists(fileinfo.FullName))
+                return File.ReadAllLines(fileinfo.FullName);
+            else
+                return null;
+        }
+
         public static string Decompress(this byte[] baseBytes)
         {
             using var decompressedStream = new MemoryStream();
