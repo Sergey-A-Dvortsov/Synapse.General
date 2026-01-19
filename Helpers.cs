@@ -238,6 +238,26 @@ namespace Synapse.General
             return DateTime.UnixEpoch.AddTicks(tiks);
         }
 
+        /// <summary>
+        /// Convert from TimeSpan to OLE automation value.
+        /// </summary>
+        /// <param name="ts">TimeSpan</param>
+        /// <returns>OLE automation value</returns>
+        public static double ToOADate(this TimeSpan ts)
+        {
+            return (DateTime.FromOADate(0) + ts).ToOADate();
+        }
+
+        /// <summary>
+        /// Convert from OLE automation value to TimeSpan.
+        /// </summary>
+        /// <param name="oats">OLE automation value</param>
+        /// <returns>TimeSpan</returns>
+        public static TimeSpan FromOADate(double oats)
+        {
+            return DateTime.FromOADate(oats) - DateTime.FromOADate(0);
+        }
+
         #endregion
 
         #region price formating
