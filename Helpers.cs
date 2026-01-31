@@ -302,6 +302,18 @@ namespace Synapse.General
                 return 0;
         }
 
+        public static int GetDecimals(this double value)
+        {
+            string s = value.ToString(CultureInfo.InvariantCulture);
+            int dot = s.IndexOf('.');
+            if (dot == -1) return 0;
+
+            // Убираем экспоненту, если есть (1.23E-4)
+            int e = s.IndexOfAny(new[] { 'E', 'e' });
+            string frac = e == -1 ? s[(dot + 1)..] : s[(dot + 1)..e];
+            return frac.TrimEnd('0').Length;
+        }
+
         #endregion     
 
         #region XAML
