@@ -384,6 +384,17 @@ namespace Synapse.General
 
         }
 
+        public static int? FindIndex<T>(this T[] array, int startIndex, Func<T, bool> predicate)
+        {
+            for (int i = startIndex; i < array.Length; i++)
+            {
+                if (predicate(array[i]))
+                    return i;
+            }
+            return null;
+        }
+
+
     }
 }
 
