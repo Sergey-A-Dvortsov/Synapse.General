@@ -89,6 +89,11 @@ namespace Synapse.General
             logger.Error("{0}. {1}", ex.Message, ex.StackTrace);
         }
 
+        public static void ToError(this Logger logger, Exception ex, string tag)
+        {
+            logger.Error($"{tag} / {ex.Message}, {ex.StackTrace}");
+        }
+
         #endregion
 
         #region json
