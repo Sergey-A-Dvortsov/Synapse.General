@@ -289,15 +289,7 @@ namespace Synapse.General
 
         public static int Decimals(this double value)
         {
-            string str = value.ToString("F12");
-
-            while (true)
-            {
-                if (str.Last() == '0')
-                    str = str.Remove(str.Length - 1, 1);
-                else
-                    break;
-            }
+            string str = value.ToString("F12").TrimEnd('0');
 
             string[] temp = str.Split('.', ',');
 
@@ -307,16 +299,33 @@ namespace Synapse.General
                 return 0;
         }
 
+        /// <summary>
+        /// Calculates decimals based on the first non-zero digit. This is not a "strict" way of calculating the number of digits after the decimal point.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static int GetDecimals(this double value)
         {
-            string s = value.ToString(CultureInfo.InvariantCulture);
+
+            if (double.IsNaN(value)) return - 1;
+
+            string s = value.ToString("F10", InvariantCulture).TrimEnd('0');
+
             int dot = s.IndexOf('.');
             if (dot == -1) return 0;
 
-            // Убираем экспоненту, если есть (1.23E-4)
-            int e = s.IndexOfAny(new[] { 'E', 'e' });
-            string frac = e == -1 ? s[(dot + 1)..] : s[(dot + 1)..e];
-            return frac.TrimEnd('0').Length;
+            int decimals = 0;
+
+            for(var i = dot + 1; i < s.Length; i++)
+            {
+                decimals++;
+                if (s[i] != '0')
+                    break;
+            }
+
+            return decimals;
+             
+
         }
 
         #endregion     
