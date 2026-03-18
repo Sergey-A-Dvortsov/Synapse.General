@@ -15,7 +15,10 @@ namespace Synapse.General
         {
             Max = max;
             Min = min;
+            Valid = true;
         }
+
+        public bool Valid { private set; get; } = false;
 
         /// <summary>
         /// Specifies a range using an absolute or relative offset from a given value.
